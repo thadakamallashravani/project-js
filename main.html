@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Quiz Instructions</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(90deg, #ff7e5f, #feb47b);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        body.dark {
+            background: #1c1c1c;
+            color: #ddd;
+        }
+
+        /* Container styling */
+        .container {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .dark .container {
+            background: #333333;
+        }
+
+        /* Header styling */
+        .header {
+            background: linear-gradient(90deg, #ff6f61, #d64550);
+            color: white;
+            padding: 20px;
+        }
+
+        .header h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        /* Content styling */
+        .content {
+            padding: 20px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+
+        li {
+            margin: 12px 0;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        li strong {
+            color: #000;
+        }
+
+        .dark li strong {
+            color: #fff;
+        }
+
+        /* Button styling */
+        .button-container {
+            padding: 20px;
+            background: #f4f4f4;
+        }
+
+        button {
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(90deg, #ff7e5f, #feb47b);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        .dark button {
+            background: linear-gradient(90deg, #333333, #555555);
+        }
+
+        /* Timer styling */
+        .timer {
+            margin: 15px 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .dark .timer {
+            color: #ffcc00;
+        }
+
+        /* Theme switcher */
+        #themeSwitcher {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            background: #ff7e5f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .dark #themeSwitcher {
+            background: #333333;
+        }
+          /* Media Queries for Responsiveness */
+          @media (max-width: 300px) {
+            .header h2 {
+                font-size: 20px;
+            }
+
+            li {
+                font-size: 13px;
+            }
+
+            button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Switcher -->
+    <button id="themeSwitcher">Switch to Dark Mode</button>
+
+    <!-- Quiz Instructions Page -->
+    <div class="container" id="quizInstructions">
+        <div class="header">
+            <h2>Quiz Instructions</h2>
+        </div>
+        <div class="content">
+            <ul>
+                <li><strong>Time Limit:</strong> 20 minutes to complete the entire quiz.</li>
+                <li><strong>Sections:</strong> 5 sections, each containing 10 questions.</li>
+                <li><strong>Question Format:</strong> Multiple choice and short-answer questions.</li>
+                <li><strong>Scoring:</strong> 1 point per question. Your final score will be displayed after submission.</li>
+                <li><strong>Navigation:</strong> Complete sections in order; no skipping.</li>
+            </ul>
+            <div class="timer" id="timer">Time Remaining: 20:00</div>
+        </div>
+        <div class="button-container">
+            <button id="startQuizButton">Start Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Theme switcher
+            const body = document.body;
+            const themeSwitcher = document.getElementById("themeSwitcher");
+            themeSwitcher.addEventListener("click", () => {
+                body.classList.toggle("dark");
+                themeSwitcher.textContent = body.classList.contains("dark") ? "Switch to Light Mode" : "Switch to Dark Mode";
+            });
+
+            // Start Quiz Button
+            const startQuizButton = document.getElementById("startQuizButton");
+            startQuizButton.addEventListener("click", function() {
+                const confirmStart = confirm("Are you ready to start the quiz?");
+                if (confirmStart) {
+                    window.location.href = "quiz.html";
+                }
+            });
+
+            // Timer Countdown
+            const timerElement = document.getElementById("timer");
+            let timeRemaining = 20 * 60; // 20 minutes in seconds
+            function updateTimer() {
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                timerElement.textContent = `Time Remaining: ${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+                if (timeRemaining > 0) {
+                    timeRemaining--;
+                    setTimeout(updateTimer, 1000);
+                } else {
+                    alert("Time's up! Redirecting to the quiz...");
+                    window.location.href = "quiz.html";
+                }
+            }
+            updateTimer();
+        });
+    </script>
+</body>
+</html>

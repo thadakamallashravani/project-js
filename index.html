@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Quiz Instructions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fa;
+            background-image: url("https://media.istockphoto.com/id/1671592188/photo/global-network-security.jpg?s=612x612&w=0&k=20&c=Gzo8wEOixMEDxmKFwumttF9N34zjKkAaFyOoBKuQzwg=");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            transition: all 0.3s ease;
+        }
+        body.dark {
+            background-color: #121212;
+            background-image: none;
+            color: #ffffff;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            padding: 20px;
+            width: 300px;
+            color: white;
+            text-align: center;
+        }
+        .dark .container {
+            background: rgba(0, 0, 0, 0.7);
+        }
+        h2 {
+            color: white;
+        }
+        .input-field {
+            margin-bottom: 15px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        .error-message {
+            color: #ffcccc;
+            font-size: 12px;
+        }
+        #passwordStrength {
+            height: 5px;
+            background: lightgray;
+            border-radius: 5px;
+            margin-top: 5px;
+            width: 100%;
+        }
+        #strengthBar {
+            height: 100%;
+            width: 0%;
+            background: red;
+            border-radius: 5px;
+        }
+        a {
+            color: #add8e6;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        /* Media Queries */
+        @media (max-width: 300px) {
+            body {
+                padding: 5px;
+            }
+            .container {
+                width: 90%;
+                padding: 10px;
+            }
+            h2 {
+                font-size: 18px;
+            }
+            button {
+                font-size: 14px;
+                padding: 8px;
+            }
+            input {
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Switcher -->
+    <button id="themeSwitcher" style="position: fixed; top: 10px; right: 10px; padding: 10px; cursor: pointer;">Switch to Dark Theme</button>
+    <!-- Login Form -->
+    <div class="container" id="loginContainer">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <div class="input-field">
+                <label for="loginUsername">Username:</label>
+                <input type="text" id="loginUsername" placeholder="Enter your username" required>
+            </div>
+            <div class="input-field">
+                <label for="loginPassword">Password:</label>
+                <input type="password" id="loginPassword" placeholder="Enter your password" required>
+            </div>
+            <button type="button" id="loginButton">Login</button>
+            <p id="loginError" class="error-message"></p>
+            <p>Don't have an account? <a href="#" id="showSignUpForm">Sign up</a></p>
+            <button type="button" id="guestLoginButton">Login as Guest</button> <!-- Guest Login Button -->
+        </form>
+    </div>
+    <!-- Sign Up Form -->
+    <div class="container" id="signUpContainer" style="display: none;">
+        <h2>Sign Up</h2>
+        <form id="signUpForm">
+            <div class="input-field">
+                <label for="signupUsername">Username:</label>
+                <input type="text" id="signupUsername" placeholder="Choose a username" required>
+            </div>
+            <div class="input-field">
+                <label for="signupPassword">Password:</label>
+                <input type="password" id="signupPassword" placeholder="Create a password" required>
+                <div id="passwordStrength">
+                    <div id="strengthBar"></div>
+                </div>
+            </div>
+            <div class="input-field">
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" id="confirmPassword" placeholder="Re-enter your password" required>
+            </div>
+            <button type="button" id="createAccountButton">Sign Up</button>
+            <p id="signupError" class="error-message"></p>
+            <p>Already have an account? <a href="#" id="showLoginForm">Login</a></p>
+        </form>
+    </div>
+    <script>
+        // Toggle between Login and Sign Up forms
+        document.getElementById('showSignUpForm').addEventListener('click', function() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('signUpContainer').style.display = 'block';
+        });
+        document.getElementById('showLoginForm').addEventListener('click', function() {
+            document.getElementById('signUpContainer').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'block';
+        });
+        // Handle Login
+        document.getElementById('loginButton').addEventListener('click', function() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const errorMessage = document.getElementById('loginError');
+
+            if (!username || !password) {
+                errorMessage.textContent = "Both fields are required.";
+            } else {
+                errorMessage.textContent = "";
+                alert("Login successful!");
+                window.location.href = "main.html";
+            }
+        });
+        // Handle Guest Login
+        document.getElementById('guestLoginButton').addEventListener('click', function() {
+            alert("You have logged in as a guest!");
+            window.location.href = "main.html";
+        });
+        // Handle Sign Up
+        document.getElementById('createAccountButton').addEventListener('click', function() {
+            const username = document.getElementById('signupUsername').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const errorMessage = document.getElementById('signupError');
+
+            if (!username || !password || !confirmPassword) {
+                errorMessage.textContent = "All fields are required.";
+            } else if (password !== confirmPassword) {
+                errorMessage.textContent = "Passwords do not match.";
+            } else {
+                errorMessage.textContent = "";
+                alert("Account created successfully!");
+            }
+        });
+        // Password Strength Indicator
+        document.getElementById('signupPassword').addEventListener('input', function() {
+            const password = this.value;
+            const strengthBar = document.getElementById('strengthBar');
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[\W]/.test(password)) strength++;
+            switch (strength) {
+                case 1:
+                    strengthBar.style.width = '25%';
+                    strengthBar.style.background = 'red';
+                    break;
+                case 2:
+                    strengthBar.style.width = '50%';
+                    strengthBar.style.background = 'orange';
+                    break;
+                case 3:
+                    strengthBar.style.width = '75%';
+                    strengthBar.style.background = 'yellowgreen';
+                    break;
+                case 4:
+                    strengthBar.style.width = '100%';
+                    strengthBar.style.background = 'green';
+                    break;
+                default:
+                    strengthBar.style.width = '0%';
+                    strengthBar.style.background = 'red';
+            }
+        });
+        // Theme Switcher
+        const body = document.body;
+        const themeSwitcher = document.getElementById('themeSwitcher');
+        themeSwitcher.addEventListener('click', () => {
+            if (body.classList.contains('dark')) {
+                body.classList.remove('dark');
+                themeSwitcher.textContent = "Switch to Dark Theme";
+            } else {
+                body.classList.add('dark');
+                themeSwitcher.textContent = "Switch to Light Theme";
+            }
+        });
+    </script>
+</body>
+</html>
